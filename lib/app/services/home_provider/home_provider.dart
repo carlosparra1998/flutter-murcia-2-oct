@@ -5,11 +5,10 @@ import 'package:flutter_murcia_2_oct/app/views/extensions/extensions_view.dart';
 import 'package:flutter_murcia_2_oct/app/views/internationalitation/internationalitation.dart';
 
 class HomeProvider with ChangeNotifier {
-  void onPressHomeOption(BuildContext context, HomeOption option) {
+  void onPressHomeOption(BuildContext context, HomeOption option) async{
     switch (option) {
       case HomeOption.dio:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        // TODO: await AuthRepository.login('user1', 'pass');
       case HomeOption.env:
         Navigator.push(
           context,

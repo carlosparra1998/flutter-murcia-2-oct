@@ -61,11 +61,7 @@ class HttpClient {
 
       switch (method) {
         case HttpCall.get:
-          response = await _get(
-            endpoint,
-            tokenRequired,
-            queryParameters,
-          );
+          response = await _get(endpoint, tokenRequired, queryParameters);
           break;
 
         case HttpCall.post:
@@ -102,7 +98,7 @@ class HttpClient {
         dataResult = response as T;
       }
     } on DioError catch (e) {
-      errorMessage = e.message;
+      errorMessage = getErrorMessage(e);
       error = true;
     } on EndpointCallError catch (e) {
       errorMessage = e.cause;
@@ -126,9 +122,7 @@ class HttpClient {
     return (await api.get(
       endpoint,
       queryParameters: queryParameters,
-      options: Options(
-        extra: {'tokenRequired': tokenRequired},
-      ),
+      options: Options(extra: {'tokenRequired': tokenRequired}),
     )).data;
   }
 
@@ -192,19 +186,6 @@ class HttpClient {
   void _onError(DioError error, ErrorInterceptorHandler handler) async {
     int? statusCode = error.response?.statusCode;
 
-    try {
-      String msg =
-          error.response?.data['message'] != null
-              ? '${error.response?.data['message']}'
-              : error.response?.data['detail'] is String
-              ? error.response?.data['detail']
-              : error.response?.data['detail'][0]['msg'];
-
-      print('$msg$statusCode');
-    } catch (_) {
-      print('Error en el servicio');
-    }
-
     handler.next(error);
   }
 
@@ -213,5 +194,20 @@ class HttpClient {
     ResponseInterceptorHandler handler,
   ) {
     handler.next(response);
+  }
+
+  String getErrorMessage(DioError error) {
+    try {
+      String msg =
+          error.response?.data['message'] != null
+              ? '${error.response?.data['message']}'
+              : error.response?.data['detail'] is String
+              ? error.response?.data['detail']
+              : error.response?.data['detail'][0]['msg'];
+
+      return msg;
+    } catch (_) {
+      return 'Error en el servicio';
+    }
   }
 }

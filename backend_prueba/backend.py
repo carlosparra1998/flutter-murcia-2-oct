@@ -19,9 +19,9 @@ def login():
                 "refresh_token": "mi_refresh_token"
             }), 200
         else:
-            return jsonify({"error": "Credenciales inválidas"}), 401
+            return jsonify({"message": "Credenciales inválidas"}), 401
     except:
-            return jsonify({"error": "Formato inválido"}), 400
+            return jsonify({"message": "Formato inválido"}), 400
 
 
 if __name__ == "__main__":
