@@ -49,7 +49,6 @@ class HttpClient {
   }) async {
     String? errorMessage;
     bool error = false;
-    bool connError = false;
     T? dataResult;
 
     try {

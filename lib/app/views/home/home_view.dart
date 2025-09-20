@@ -1,47 +1,48 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_murcia_2_oct/app/enums/home_options.dart';
+import 'package:flutter_murcia_2_oct/app/services/home_provider/home_provider.dart';
+import 'package:flutter_murcia_2_oct/app/views/home/widgets/home_option.dart';
+import 'package:flutter_murcia_2_oct/app/widgets/my_app_bar.dart';
+import 'package:provider/provider.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
+      backgroundColor: Color.fromARGB(255, 226, 226, 226),
+      appBar: myAppBar(context, 'Bienvenidos a Flutter Murcia'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+          children: [
+            Image.asset(
+              'assets/images/icon.png',
+              fit: BoxFit.contain,
+              width: 150,
+              height: 150,
             ),
+            SizedBox(height: 50),
+            ...List.generate(HomeOption.values.length, (ix) {
+              HomeOption option = HomeOption.values[ix];
+              return HomeOptionWidget(
+                title: option.title,
+                onTap: () {
+                  context.read<HomeProvider>().onPressHomeOption(
+                    context,
+                    option,
+                  );
+                },
+              );
+            }),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
