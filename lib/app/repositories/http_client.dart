@@ -2,7 +2,6 @@ import 'dart:io' as io;
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_murcia_2_oct/app/utils/env.dart';
 
 import 'http_response.dart';
@@ -174,8 +173,9 @@ class HttpClient {
   ) async {
     options.baseUrl = Env.API_URL ?? '';
 
-    String? token = 'token';
+    String? token = 'AQUI_ESTARÁ_EL_ACCESS_TOKEN_SI_ES_REQUERIDO';
 
+    // ignore: unnecessary_null_comparison
     if (options.extra['tokenRequired'] && token != null) {
       options.headers['Authorization'] = 'Bearer $token';
     }
@@ -185,6 +185,7 @@ class HttpClient {
 
   void _onError(DioError error, ErrorInterceptorHandler handler) async {
     int? statusCode = error.response?.statusCode;
+    print(statusCode);
 
     handler.next(error);
   }
