@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_murcia_2_oct/app/utils/env.dart';
 
 import 'http_response.dart';
 import 'response_model.dart';
@@ -177,7 +178,7 @@ class HttpClient {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    options.baseUrl = dotenv.env['API_URL']! + dotenv.env['API_VERSION']!;
+    options.baseUrl = Env.API_URL ?? '';
 
     String? token = 'token';
 
