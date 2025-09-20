@@ -7,6 +7,9 @@ import 'package:flutter_murcia_2_oct/app/views/internationalitation/internationa
 class HomeProvider with ChangeNotifier {
   void onPressHomeOption(BuildContext context, HomeOption option) {
     switch (option) {
+      case HomeOption.dio:
+        // TODO: Handle this case.
+        throw UnimplementedError();
       case HomeOption.env:
         Navigator.push(
           context,
@@ -24,9 +27,7 @@ class HomeProvider with ChangeNotifier {
       case HomeOption.extensions:
         Navigator.push(
           context,
-          MaterialPageRoute<void>(
-            builder: (context) => const ExtensionsView(),
-          ),
+          MaterialPageRoute<void>(builder: (context) => const ExtensionsView()),
         );
     }
   }

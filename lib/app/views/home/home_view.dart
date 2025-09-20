@@ -25,8 +25,8 @@ class _HomeViewState extends State<HomeView> {
             Image.asset(
               'assets/images/icon.png',
               fit: BoxFit.contain,
-              width: 150,
-              height: 150,
+              width: 120,
+              height: 120,
             ),
             SizedBox(height: 50),
             ...List.generate(HomeOption.values.length, (ix) {

@@ -1,8 +1,13 @@
 enum HomeOption {
-  env, internationalitation, extensions;
+  dio,
+  env,
+  internationalitation,
+  extensions;
 
-  String get title{
-    switch(this){
+  String get title {
+    switch (this) {
+      case HomeOption.dio:
+        return 'Prueba DIO HTTP';
       case HomeOption.env:
         return 'Variables entorno';
       case HomeOption.internationalitation:
