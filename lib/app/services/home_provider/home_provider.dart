@@ -11,11 +11,13 @@ class HomeProvider with ChangeNotifier {
   void onPressHomeOption(BuildContext context, HomeOption option) async {
     switch (option) {
       case HomeOption.dio:
-        await AuthRepository.login('user1', 'pass');
+        final res = await AuthRepository.login('user1', 'pass');
+        print(res);
       case HomeOption.env:
-        Get.toNamed(RouterHelper.getEnvScreen(), arguments: {
-          "example" : "Hello view!"
-        });
+        Get.toNamed(
+          RouterHelper.getEnvScreen(),
+          arguments: {"example": "Hello view!"},
+        );
 
       case HomeOption.internationalitation:
         Navigator.push(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_murcia_2_oct/app/utils/env.dart';
 import 'package:flutter_murcia_2_oct/app/widgets/my_app_bar.dart';
 import 'package:get/get.dart';
 
@@ -22,11 +23,10 @@ class _EnvVariablesViewState extends State<EnvVariablesView> {
           children: [
             Text(widget.comment),
             SizedBox(height: 20),
-            Text('ex'),
+            Text(Env.API_URL ?? ''),
             SizedBox(height: 20),
-            Text('ex'),
+            Text(Env.PASSWORD ?? ''),
             SizedBox(height: 20),
-            Text('ex'),
           ],
         ),
       ),
