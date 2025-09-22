@@ -1,0 +1,17 @@
+{
+    "helloWorld": "Hello World!",
+    "spanish" : "Spanish",
+    "english" : "English",
+    "hello" : "Hello",
+    "@hello": {
+        "description": "A message with a description"
+    },
+    "totalValue": "The total value is {value} euros",
+    "@totalValue": {
+        "placeholders": {
+            "value" : {
+                "type" : "int"
+            }
+        }
+    }
+}

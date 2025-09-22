@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_murcia_2_oct/app/enums/home_options.dart';
 import 'package:flutter_murcia_2_oct/app/views/env_variables/env_variables_view.dart';
 import 'package:flutter_murcia_2_oct/app/views/extensions/extensions_view.dart';
-import 'package:flutter_murcia_2_oct/app/views/internationalitation/internationalitation.dart';
+import 'package:flutter_murcia_2_oct/app/views/internationalitation/internationalitation_view.dart';
 
 class HomeProvider with ChangeNotifier {
   void onPressHomeOption(BuildContext context, HomeOption option) async{
