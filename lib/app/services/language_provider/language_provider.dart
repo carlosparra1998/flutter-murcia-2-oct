@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_murcia_2_oct/app/routes/route_helper.dart';
 import 'package:flutter_murcia_2_oct/app/utils/global_resources.dart';
 import 'package:flutter_murcia_2_oct/app/views/home/home_view.dart';
+import 'package:get/get.dart';
+import 'package:get/utils.dart';
 
 class LanguageProvider with ChangeNotifier {
   Locale? _selectedLanguage;
@@ -20,10 +23,7 @@ class LanguageProvider with ChangeNotifier {
     }
     _selectedLanguage = Locale(language);
     if (!_init) {
-      Navigator.push(
-        context,
-        MaterialPageRoute<void>(builder: (context) => const HomeView()),
-      );
+      Get.offAllNamed(RouterHelper.getHomeScreen());
     }
     _init = true;
   }

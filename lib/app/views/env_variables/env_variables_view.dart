@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_murcia_2_oct/app/widgets/my_app_bar.dart';
+import 'package:get/get.dart';
 
 class EnvVariablesView extends StatefulWidget {
-  const EnvVariablesView({super.key});
+  final String comment;
+  EnvVariablesView({super.key}) : comment = Get.arguments['example'];
 
   @override
   State<EnvVariablesView> createState() => _EnvVariablesViewState();
@@ -18,7 +20,7 @@ class _EnvVariablesViewState extends State<EnvVariablesView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('ex'),
+            Text(widget.comment),
             SizedBox(height: 20),
             Text('ex'),
             SizedBox(height: 20),
