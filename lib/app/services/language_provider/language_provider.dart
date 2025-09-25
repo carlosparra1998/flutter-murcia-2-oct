@@ -19,6 +19,8 @@ class LanguageProvider with ChangeNotifier {
     if (language == null) {
       language = 'es';
       await _setLanguage(Locale(language));
+      Get.offAllNamed(RouterHelper.getHomeScreen());
+
       return;
     }
     _selectedLanguage = Locale(language);
