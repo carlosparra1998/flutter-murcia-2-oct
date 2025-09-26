@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
 
 class LanguageProvider with ChangeNotifier{
-  Locale locale = Locale('es');
+  Locale _locale = Locale('es');
+  Locale get locale => _locale;
 
   void changeLanguage(Locale loc){
-    locale = loc;
+    _locale = loc;
     notifyListeners();
   }
 }
