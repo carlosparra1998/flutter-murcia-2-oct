@@ -36,7 +36,8 @@ class HttpClient {
     }
   }
 
-  bool _isNotPrimitiveData<T>() => T != Map && T != String && T != num;
+  bool _isNotPrimitiveData<T>() =>
+      T != Map && T != String && T != num && T != num;
 
   Future<HttpResponse<T>> call<T>(
     String endpoint, {
@@ -61,7 +62,7 @@ class HttpClient {
             endpoint,
             tokenRequired,
             queryParameters,
-            base as T,
+            base,
           );
           break;
 
@@ -71,7 +72,7 @@ class HttpClient {
             tokenRequired,
             queryParameters,
             data,
-            base as T,
+            base,
           );
           break;
 
@@ -81,7 +82,7 @@ class HttpClient {
             tokenRequired,
             queryParameters,
             data,
-            base as T,
+            base,
           );
           break;
 
@@ -91,7 +92,7 @@ class HttpClient {
             tokenRequired,
             queryParameters,
             data,
-            base as T,
+            base,
           );
           break;
       }
@@ -158,7 +159,7 @@ class HttpClient {
     String endpoint,
     bool tokenRequired,
     Map<String, dynamic>? queryParameters,
-    T base,
+    T? base,
   ) async {
     return (await api.get(
       endpoint,
@@ -172,7 +173,7 @@ class HttpClient {
     bool tokenRequired,
     Map<String, dynamic>? queryParameters,
     dynamic data,
-    T base,
+    T? base,
   ) async {
     return (await api.post<T>(
       endpoint,
@@ -187,7 +188,7 @@ class HttpClient {
     bool tokenRequired,
     Map<String, dynamic>? queryParameters,
     dynamic data,
-    T base,
+    T? base,
   ) async {
     return (await api.put(
       endpoint,
@@ -202,7 +203,7 @@ class HttpClient {
     bool tokenRequired,
     Map<String, dynamic>? queryParameters,
     dynamic data,
-    T base,
+    T? base,
   ) async {
     return (await api.delete(
       endpoint,
