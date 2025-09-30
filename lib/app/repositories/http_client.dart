@@ -45,7 +45,7 @@ class HttpClient {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     bool tokenRequired = true,
-    T? base,
+    dynamic base,
   }) async {
     String? errorMessage;
     bool error = false;
@@ -140,7 +140,11 @@ class HttpClient {
         );
       }
       if (response.data is List) {
-        response.data = [];
+        response.data =
+            response.data.map((e) {
+              final base = response.requestOptions.extra['base'].base;
+              return base.fromJson(e);
+            }).toList();
       }
     }
 
@@ -159,7 +163,7 @@ class HttpClient {
     String endpoint,
     bool tokenRequired,
     Map<String, dynamic>? queryParameters,
-    T? base,
+    dynamic base,
   ) async {
     return (await api.get(
       endpoint,
@@ -173,7 +177,7 @@ class HttpClient {
     bool tokenRequired,
     Map<String, dynamic>? queryParameters,
     dynamic data,
-    T? base,
+    dynamic base,
   ) async {
     return (await api.post<T>(
       endpoint,
@@ -188,7 +192,7 @@ class HttpClient {
     bool tokenRequired,
     Map<String, dynamic>? queryParameters,
     dynamic data,
-    T? base,
+    dynamic base,
   ) async {
     return (await api.put(
       endpoint,
@@ -203,7 +207,7 @@ class HttpClient {
     bool tokenRequired,
     Map<String, dynamic>? queryParameters,
     dynamic data,
-    T? base,
+    dynamic base,
   ) async {
     return (await api.delete(
       endpoint,
