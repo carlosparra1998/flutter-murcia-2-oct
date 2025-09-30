@@ -1,6 +1,4 @@
-class ResponseModel<T> {
-  bool loadedData = true;
-
+abstract class ResponseModel<T> {
   T fromJson(Map<String, dynamic> json) {
     return base;
   }

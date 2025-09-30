@@ -5,7 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_murcia_2_oct/app/utils/env.dart';
 
 import 'http_response.dart';
+import 'response_model.dart';
 
+/*
 enum HttpCall { get, post, put, delete }
 
 class HttpClient {
@@ -38,65 +40,65 @@ class HttpClient {
 
   bool _isNotPrimitiveData<T>() => T != Map && T != String && T != num;
 
-  Future<HttpResponse<T>> call<T>(
+  Future<HttpResponse<T, R>> call<T, R>(
     String endpoint, {
     HttpCall method = HttpCall.get,
+    ResponseModel<R>? object,
     dynamic data,
     Map<String, dynamic>? queryParameters,
     bool tokenRequired = true,
-    T? base,
   }) async {
     String? errorMessage;
     bool error = false;
-    Response<T>? response;
+    T? dataResult;
 
     try {
-      if (_isNotPrimitiveData<T>() && base == null) {
-        throw EndpointCallError('No object error');
+      if (_isNotPrimitiveData<T>() && object == null) {
+        //throw EndpointCallError('No object error');
       }
+
+      dynamic response;
 
       switch (method) {
         case HttpCall.get:
-          response = await _get<T>(
-            endpoint,
-            tokenRequired,
-            queryParameters,
-            base as T,
-          );
+          response = await _get(endpoint, tokenRequired, queryParameters);
           break;
 
         case HttpCall.post:
-          response = await _post<T>(
+          response = await _post(
             endpoint,
             tokenRequired,
             queryParameters,
             data,
-            base as T,
           );
           break;
 
         case HttpCall.delete:
-          response = await _delete<T>(
+          response = await _delete(
             endpoint,
             tokenRequired,
             queryParameters,
             data,
-            base as T,
           );
           break;
 
         case HttpCall.put:
-          response = await _put<T>(
-            endpoint,
-            tokenRequired,
-            queryParameters,
-            data,
-            base as T,
-          );
+          response = await _put(endpoint, tokenRequired, queryParameters, data);
           break;
       }
+
+      if (_isNotPrimitiveData<T>()) {
+        if (response is Map<String, dynamic>) {
+          dataResult = object!.fromJson(response) as T;
+        }
+        if (response is List) {
+          dataResult = response.map((e) => object!.fromJson(e)).toList() as T;
+        }
+      } else {
+        dataResult = response as T;
+      }
     } on DioError catch (e) {
-      errorMessage = _getErrorMessage(e);
+      errorMessage = getErrorMessage(e);
       error = true;
     } on EndpointCallError catch (e) {
       errorMessage = e.cause;
@@ -105,11 +107,65 @@ class HttpClient {
       error = true;
     }
 
-    return HttpResponse<T>(
-      data: response?.data,
+    return HttpResponse<T, R>(
+      data: dataResult,
       errorMessage: errorMessage,
       hasError: error,
     );
+  }
+
+  Future<dynamic> _get(
+    String endpoint,
+    bool tokenRequired,
+    Map<String, dynamic>? queryParameters,
+  ) async {
+    return (await api.get(
+      endpoint,
+      queryParameters: queryParameters,
+      options: Options(extra: {'tokenRequired': tokenRequired}),
+    )).data;
+  }
+
+  Future<dynamic> _post(
+    String endpoint,
+    bool tokenRequired,
+    Map<String, dynamic>? queryParameters,
+    dynamic data,
+  ) async {
+    return (await api.post(
+      endpoint,
+      queryParameters: queryParameters,
+      data: data,
+      options: Options(extra: {'tokenRequired': tokenRequired}),
+    )).data;
+  }
+
+  Future<dynamic> _put(
+    String endpoint,
+    bool tokenRequired,
+    Map<String, dynamic>? queryParameters,
+    dynamic data,
+  ) async {
+    return (await api.put(
+      endpoint,
+      queryParameters: queryParameters,
+      data: data,
+      options: Options(extra: {'tokenRequired': tokenRequired}),
+    )).data;
+  }
+
+  Future<dynamic> _delete(
+    String endpoint,
+    bool tokenRequired,
+    Map<String, dynamic>? queryParameters,
+    dynamic data,
+  ) async {
+    return (await api.delete(
+      endpoint,
+      queryParameters: queryParameters,
+      data: data,
+      options: Options(extra: {'tokenRequired': tokenRequired}),
+    )).data;
   }
 
   void _onRequest(
@@ -128,91 +184,21 @@ class HttpClient {
     return handler.next(options);
   }
 
-  void _onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) {
-    if (response.requestOptions.extra['base'] != null) {
-      if (response.data is Map<String, dynamic>) {
-        response.data = response.requestOptions.extra['base'].base.fromJson(
-          response.data,
-        );
-      }
-      if (response.data is List) {
-        response.data = [];
-      }
-    }
-
-    handler.next(response);
-  }
-
   void _onError(DioError error, ErrorInterceptorHandler handler) async {
     int? statusCode = error.response?.statusCode;
     print(statusCode);
-    print(_getErrorMessage(error));
 
     handler.next(error);
   }
 
-  Future<Response<T>> _get<T>(
-    String endpoint,
-    bool tokenRequired,
-    Map<String, dynamic>? queryParameters,
-    T base,
-  ) async {
-    return (await api.get(
-      endpoint,
-      queryParameters: queryParameters,
-      options: Options(extra: {'tokenRequired': tokenRequired, 'base': base}),
-    ));
+  void _onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
+    handler.next(response);
   }
 
-  Future<Response<T>> _post<T>(
-    String endpoint,
-    bool tokenRequired,
-    Map<String, dynamic>? queryParameters,
-    dynamic data,
-    T base,
-  ) async {
-    return (await api.post<T>(
-      endpoint,
-      queryParameters: queryParameters,
-      data: data,
-      options: Options(extra: {'tokenRequired': tokenRequired, 'base': base}),
-    ));
-  }
-
-  Future<Response<T>> _put<T>(
-    String endpoint,
-    bool tokenRequired,
-    Map<String, dynamic>? queryParameters,
-    dynamic data,
-    T base,
-  ) async {
-    return (await api.put(
-      endpoint,
-      queryParameters: queryParameters,
-      data: data,
-      options: Options(extra: {'tokenRequired': tokenRequired, 'base': base}),
-    ));
-  }
-
-  Future<Response<T>> _delete<T>(
-    String endpoint,
-    bool tokenRequired,
-    Map<String, dynamic>? queryParameters,
-    dynamic data,
-    T base,
-  ) async {
-    return (await api.delete(
-      endpoint,
-      queryParameters: queryParameters,
-      data: data,
-      options: Options(extra: {'tokenRequired': tokenRequired, 'base': base}),
-    ));
-  }
-
-  String _getErrorMessage(DioError error) {
+  String getErrorMessage(DioError error) {
     try {
       String msg =
           error.response?.data['message'] != null
@@ -227,3 +213,4 @@ class HttpClient {
     }
   }
 }
+*/

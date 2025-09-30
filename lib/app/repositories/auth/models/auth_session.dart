@@ -1,6 +1,6 @@
 import 'package:flutter_murcia_2_oct/app/repositories/response_model.dart';
 
-class AuthSession extends ResponseModel<AuthSession> {
+class AuthSession implements ResponseModel<AuthSession> {
   final String? accessToken;
   final String? refreshToken;
 

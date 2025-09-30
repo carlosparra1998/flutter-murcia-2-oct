@@ -1,4 +1,4 @@
-class HttpResponse<T, R> {
+class HttpResponse<T> {
   final T? data;
   final String? errorMessage;
   final bool hasError;
