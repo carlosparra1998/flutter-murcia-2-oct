@@ -37,7 +37,7 @@ class HttpClient {
   }
 
   bool _isNotPrimitiveData<T>() =>
-      T != Map && T != String && T != num && T != num;
+      T != Map && T != String && T != num && T != bool;
 
   Future<HttpResponse<T>> call<T>(
     String endpoint, {
