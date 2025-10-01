@@ -14,7 +14,6 @@ class AuthRepository {
     return await client.call<AuthSession, AuthSession>(
       AuthEndpoints.login,
       method: HttpCall.post,
-      base: AuthSession().base,
       data: {'username': email, 'password': password},
       tokenRequired: false,
     );

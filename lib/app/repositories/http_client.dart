@@ -1,10 +1,6 @@
-import 'dart:io' as io;
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_murcia_2_oct/app/repositories/response_model.dart';
+import 'package:flutter_murcia_2_oct/app/repositories/auth/models/auth_session.dart';
 import 'package:flutter_murcia_2_oct/app/utils/env.dart';
-import 'package:flutter_murcia_2_oct/app/utils/general_utils.dart';
 
 import 'http_response.dart';
 
@@ -27,58 +23,32 @@ class HttpClient {
         onResponse: _onResponse,
       ),
     );
-    if (!kIsWeb) {
-      final adapter = api.httpClientAdapter;
-      if (adapter is IOHttpClientAdapter) {
-        adapter.onHttpClientCreate = (io.HttpClient dioClient) {
-          dioClient.badCertificateCallback = (_, __, ___) => true;
-          return dioClient;
-        };
-      }
-    }
   }
 
   Future<HttpResponse<T>> call<T, R>(
     String endpoint, {
     HttpCall method = HttpCall.get,
     dynamic data,
-    Map<String, dynamic>? queryParameters,
     bool tokenRequired = true,
-    dynamic base,
   }) async {
     String? errorMessage;
     bool error = false;
     Response<T>? response;
 
-    base = !isNotPrimitiveData<T>() ? null : base;
+    Options options = Options(
+      extra: {'tokenRequired': tokenRequired, 'type': R},
+    );
 
     try {
-      if (isNotPrimitiveData<T>()) {
-        if (base == null) {
-          throw EndpointCallError(
-            'Debes indicar un objeto base para un tipo no primitivo',
-          );
-        }
-        if (base is! R) {
-          throw EndpointCallError(
-            'El objeto base debe ser igual al tipo indicado',
-          );
-        }
-        if (base is! ResponseModel<R>) {
-          throw EndpointCallError(
-            'El tipo indicado debe implementar ResponseModel',
-          );
-        }
-      }
+      switch (method) {
+        case HttpCall.get:
+          response = (await api.get(endpoint, options: options));
 
-      response = await _getResponse<T, R>(
-        method,
-        endpoint,
-        tokenRequired,
-        queryParameters,
-        data,
-        base,
-      );
+        case HttpCall.post:
+          response = (await api.post(endpoint, data: data, options: options));
+        default:
+          response = null; //IMPLEMENTAR RESTO DE VERBOS
+      }
     } on DioError catch (e) {
       errorMessage = _getErrorMessage(e);
       error = true;
@@ -116,19 +86,13 @@ class HttpClient {
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) {
-    if (response.requestOptions.extra['base'] != null) {
-      if (response.data is Map<String, dynamic>) {
-        response.data = response.requestOptions.extra['base'].base.fromJson(
-          response.data,
-        );
-      }
-      if (response.data is List) {
-        response.data =
-            response.data.map((e) {
-              final base = response.requestOptions.extra['base'].base;
-              return base.fromJson(e);
-            }).toList();
-      }
+    Type type = response.requestOptions.extra['type'];
+
+    if (response.data is Map<String, dynamic>) {
+      response.data = getObject(type, response.data);
+    }
+    if (response.data is List) {
+      response.data = getObjects(type, response.data);
     }
 
     handler.next(response);
@@ -142,83 +106,41 @@ class HttpClient {
     handler.next(error);
   }
 
-  Future<Response<T>> _getResponse<T, R>(
-    HttpCall method,
-    String endpoint,
-    bool tokenRequired,
-    Map<String, dynamic>? queryParameters,
-    dynamic data,
-    dynamic base,
-  ) async {
-    Response response;
-
-    switch (method) {
-      case HttpCall.get:
-        response = (await api.get(
-          endpoint,
-          queryParameters: queryParameters,
-          options: Options(
-            extra: {'tokenRequired': tokenRequired, 'base': base},
-          ),
-        ));
-
-      case HttpCall.post:
-        response = (await api.post(
-          endpoint,
-          queryParameters: queryParameters,
-          data: data,
-          options: Options(
-            extra: {'tokenRequired': tokenRequired, 'base': base},
-          ),
-        ));
-
-      case HttpCall.delete:
-        response = (await api.delete(
-          endpoint,
-          queryParameters: queryParameters,
-          data: data,
-          options: Options(
-            extra: {'tokenRequired': tokenRequired, 'base': base},
-          ),
-        ));
-
-      case HttpCall.put:
-        response = (await api.put(
-          endpoint,
-          queryParameters: queryParameters,
-          data: data,
-          options: Options(
-            extra: {'tokenRequired': tokenRequired, 'base': base},
-          ),
-        ));
+  dynamic getObject(Type type, dynamic data) {
+    switch (type) {
+      case AuthSession:
+        return AuthSession.fromJson(data);
+      /* 
+      case Clase1:
+        return Clase1.fromJson(data);
+      case Clase2:
+        return Clase2.fromJson(data);
+      case Clase3:
+        return Clase3.fromJson(data);
+      */
     }
 
-    T? dataResponse;
+    return null;
+  }
 
-    if (T == R && response.data is List) {
-      throw EndpointCallError(
-        'Tipado incorrecto. Se recibe un List y esperas un Object',
-      );
+  dynamic getObjects(Type type, dynamic data) {
+    switch (type) {
+      case int:
+        return (data as List).map((e) => int.parse('$e')).toList();
+      case String:
+        return (data as List).map((e) => '$e').toList();
+      case AuthSession:
+        return (data as List).map((e) => AuthSession.fromJson(e)).toList();
+      /* 
+      case Clase1:
+        return (data as List).map((e) => Clase1.fromJson(e)).toList();
+      case Clase2:
+        return (data as List).map((e) => Clase2.fromJson(e)).toList();
+      case Clase3:
+        return (data as List).map((e) => Clase3.fromJson(e)).toList();
+      */
     }
-
-    if (T != R && response.data is! List) {
-      dataResponse = [response.data as R] as T;
-    } else {
-      dataResponse =
-          T != R
-              ? List<R>.from(response.data.map((e) => e as R)) as T
-              : response.data;
-    }
-
-    return Response<T>(
-      data: dataResponse,
-      requestOptions: response.requestOptions,
-      statusCode: response.statusCode,
-      isRedirect: response.isRedirect,
-      redirects: response.redirects,
-      extra: response.extra,
-      headers: response.headers,
-    );
+    return null;
   }
 
   String _getErrorMessage(DioError error) {
