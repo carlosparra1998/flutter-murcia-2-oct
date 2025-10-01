@@ -11,7 +11,7 @@ class AuthRepository {
     String email,
     String password,
   ) async {
-    return await client.call<List<AuthSession>>(
+    return await client.call<List<AuthSession>, AuthSession>(
       AuthEndpoints.login,
       method: HttpCall.post,
       base: AuthSession().base,
@@ -21,7 +21,7 @@ class AuthRepository {
   }
 
   static Future<HttpResponse<String>> register(String body) async {
-    return await client.call<String>(
+    return await client.call<String, String>(
       AuthEndpoints.register,
       method: HttpCall.post,
       data: body,

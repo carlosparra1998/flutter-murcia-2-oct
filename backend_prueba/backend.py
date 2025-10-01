@@ -17,20 +17,10 @@ def login():
         if username == VALID_USER and password == VALID_PASSWORD:
             return (
                 jsonify(
-                    [
-                        {
+                   {
                             "access_token": "mi_access_token",
                             "refresh_token": "mi_refresh_token",
-                        },
-                        {
-                            "access_token": "mi_access_token2",
-                            "refresh_token": "mi_refresh_token2",
-                        },
-                        {
-                            "access_token": "mi_access_token3",
-                            "refresh_token": "mi_refresh_token3",
-                        },
-                    ]
+                        }
                 ),
                 200,
             )

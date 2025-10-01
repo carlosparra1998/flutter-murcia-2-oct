@@ -37,9 +37,15 @@ class HttpClient {
   }
 
   bool _isNotPrimitiveData<T>() =>
-      T != Map && T != String && T != num && T != bool;
+      T != Map &&
+      T != String &&
+      T != num &&
+      T != bool &&
+      (T != List<String>) &&
+      (T != List<num>) &&
+      (T != List<bool>);
 
-  Future<HttpResponse<T>> call<T>(
+  Future<HttpResponse<T>> call<T, R>(
     String endpoint, {
     HttpCall method = HttpCall.get,
     dynamic data,
@@ -51,12 +57,16 @@ class HttpClient {
     bool error = false;
     Response<T>? response;
 
+    base = base is R ? base : null;
+
+    print(base);
+
     try {
       if (_isNotPrimitiveData<T>() && base == null) {
         throw EndpointCallError('No object error');
       }
 
-      response = await _getResponse<T>(
+      response = await _getResponse<T, R>(
         method,
         endpoint,
         tokenRequired,
@@ -127,7 +137,7 @@ class HttpClient {
     handler.next(error);
   }
 
-  Future<Response<T>> _getResponse<T>(
+  Future<Response<T>> _getResponse<T, R>(
     HttpCall method,
     String endpoint,
     bool tokenRequired,
@@ -135,9 +145,11 @@ class HttpClient {
     dynamic data,
     dynamic base,
   ) async {
+    Response response;
+
     switch (method) {
       case HttpCall.get:
-        return (await api.get(
+        response = (await api.get(
           endpoint,
           queryParameters: queryParameters,
           options: Options(
@@ -146,7 +158,7 @@ class HttpClient {
         ));
 
       case HttpCall.post:
-        return (await api.post<T>(
+        response = (await api.post(
           endpoint,
           queryParameters: queryParameters,
           data: data,
@@ -156,7 +168,7 @@ class HttpClient {
         ));
 
       case HttpCall.delete:
-        return (await api.delete(
+        response = (await api.delete(
           endpoint,
           queryParameters: queryParameters,
           data: data,
@@ -166,7 +178,7 @@ class HttpClient {
         ));
 
       case HttpCall.put:
-        return (await api.put(
+        response = (await api.put(
           endpoint,
           queryParameters: queryParameters,
           data: data,
@@ -175,6 +187,21 @@ class HttpClient {
           ),
         ));
     }
+
+    print(response);
+
+    return Response<T>(
+      data:
+          T != R
+              ? List<R>.from(response.data.map((e) => e as R))
+              : response.data,
+      requestOptions: response.requestOptions,
+      statusCode: response.statusCode,
+      isRedirect: response.isRedirect,
+      redirects: response.redirects,
+      extra: response.extra,
+      headers: response.headers,
+    );
   }
 
   String _getErrorMessage(DioError error) {
