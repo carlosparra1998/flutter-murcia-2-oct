@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_murcia_2_oct/app/extensions/date_time.dart';
+import 'package:flutter_murcia_2_oct/app/extensions/num.dart';
 import 'package:flutter_murcia_2_oct/app/widgets/my_app_bar.dart';
 
 class ExtensionsView extends StatefulWidget {
@@ -11,6 +13,8 @@ class ExtensionsView extends StatefulWidget {
 class _ExtensionsView extends State<ExtensionsView> {
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    double bill = 3.3434;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 226, 226, 226),
       appBar: myAppBar(context, 'Extensiones'),
@@ -18,13 +22,9 @@ class _ExtensionsView extends State<ExtensionsView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('ex'),
+            Text(now.toNaturalLanguage()),
             SizedBox(height: 20),
-            Text('ex'),
-            SizedBox(height: 20),
-            Text('ex'),
-            SizedBox(height: 20),
-            Text('ex'),
+            Text(bill.toMoney()),
           ],
         ),
       ),

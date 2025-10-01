@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_murcia_2_oct/app/utils/env.dart';
 import 'package:flutter_murcia_2_oct/app/widgets/my_app_bar.dart';
 
 class EnvVariablesView extends StatefulWidget {
@@ -18,13 +19,11 @@ class _EnvVariablesViewState extends State<EnvVariablesView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('ex'),
+            Text(Env.API_URL ?? ''),
             SizedBox(height: 20),
-            Text('ex'),
+            Text(Env.PASSWORD ?? ''),
             SizedBox(height: 20),
-            Text('ex'),
-            SizedBox(height: 20),
-            Text('ex'),
+            Text(Env.API_KEY ?? ''),
           ],
         ),
       ),
