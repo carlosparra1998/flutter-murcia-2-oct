@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_murcia_2_oct/app/enums/home_options.dart';
-import 'package:flutter_murcia_2_oct/app/repositories/auth/auth_repository.dart';
 import 'package:flutter_murcia_2_oct/app/utils/route_helper.dart';
 import 'package:get/get.dart';
 
@@ -8,8 +7,7 @@ class HomeProvider with ChangeNotifier {
   void onPressHomeOption(BuildContext context, HomeOption option) async {
     switch (option) {
       case HomeOption.dio:
-      final t = await AuthRepository.login('user1', 'pass');
-      print(t);
+      //final response = await AuthRepository.login('user1', 'pass');
       case HomeOption.env:
         Get.toNamed(RouteHelper.envVariables);
       case HomeOption.internationalitation:
