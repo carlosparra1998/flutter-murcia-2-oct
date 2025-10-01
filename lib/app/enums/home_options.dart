@@ -1,4 +1,5 @@
 enum HomeOption {
+  generic,
   dio,
   env,
   internationalitation,
@@ -6,6 +7,8 @@ enum HomeOption {
 
   String get title {
     switch (this) {
+      case HomeOption.generic:
+        return 'Progr. Genérica';
       case HomeOption.dio:
         return 'Prueba DIO HTTP';
       case HomeOption.env:
