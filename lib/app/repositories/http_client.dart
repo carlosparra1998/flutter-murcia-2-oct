@@ -188,13 +188,25 @@ class HttpClient {
         ));
     }
 
-    print(response);
+    T? dataResponse;
+
+    if (T == R && response.data is List) {
+      throw EndpointCallError(
+        'Tipado incorrecto. Se recibe un List y esperas un Object',
+      );
+    }
+
+    if (T != R && response.data is! List) {
+      dataResponse = [response.data as R] as T;
+    } else {
+      dataResponse =
+          T != R
+              ? List<R>.from(response.data.map((e) => e as R)) as T
+              : response.data;
+    }
 
     return Response<T>(
-      data:
-          T != R
-              ? List<R>.from(response.data.map((e) => e as R))
-              : response.data,
+      data: dataResponse,
       requestOptions: response.requestOptions,
       statusCode: response.statusCode,
       isRedirect: response.isRedirect,
