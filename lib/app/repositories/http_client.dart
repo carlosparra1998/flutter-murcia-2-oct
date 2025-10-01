@@ -2,6 +2,7 @@ import 'dart:io' as io;
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_murcia_2_oct/app/repositories/response_model.dart';
 import 'package:flutter_murcia_2_oct/app/utils/env.dart';
 import 'package:flutter_murcia_2_oct/app/utils/general_utils.dart';
 
@@ -49,11 +50,23 @@ class HttpClient {
     bool error = false;
     Response<T>? response;
 
-    base = base is R ? base : null;
-
     try {
-      if (isNotPrimitiveData<T>() && base == null) {
-        throw EndpointCallError('No object base error');
+      if (isNotPrimitiveData<T>()) {
+        if (base == null) {
+          throw EndpointCallError(
+            'Debes indicar un objeto base para un tipo no primitivo',
+          );
+        }
+        if (base is! R) {
+          throw EndpointCallError(
+            'El objeto base debe ser igual al tipo indicado',
+          );
+        }
+        if (base is! ResponseModel<R>) {
+          throw EndpointCallError(
+            'El tipo indicado debe implementar ResponseModel',
+          );
+        }
       }
 
       response = await _getResponse<T, R>(
