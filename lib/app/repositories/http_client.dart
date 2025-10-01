@@ -56,46 +56,14 @@ class HttpClient {
         throw EndpointCallError('No object error');
       }
 
-      switch (method) {
-        case HttpCall.get:
-          response = await _get<T>(
-            endpoint,
-            tokenRequired,
-            queryParameters,
-            base,
-          );
-          break;
-
-        case HttpCall.post:
-          response = await _post<T>(
-            endpoint,
-            tokenRequired,
-            queryParameters,
-            data,
-            base,
-          );
-          break;
-
-        case HttpCall.delete:
-          response = await _delete<T>(
-            endpoint,
-            tokenRequired,
-            queryParameters,
-            data,
-            base,
-          );
-          break;
-
-        case HttpCall.put:
-          response = await _put<T>(
-            endpoint,
-            tokenRequired,
-            queryParameters,
-            data,
-            base,
-          );
-          break;
-      }
+      response = await _getResponse<T>(
+        method,
+        endpoint,
+        tokenRequired,
+        queryParameters,
+        data,
+        base,
+      );
     } on DioError catch (e) {
       errorMessage = _getErrorMessage(e);
       error = true;
@@ -157,6 +125,52 @@ class HttpClient {
     print(_getErrorMessage(error));
 
     handler.next(error);
+  }
+
+  Future<Response<T>> _getResponse<T>(
+    HttpCall method,
+    String endpoint,
+    bool tokenRequired,
+    Map<String, dynamic>? queryParameters,
+    dynamic data,
+    dynamic base,
+  ) async {
+    switch (method) {
+      case HttpCall.get:
+        return await _get<T>(
+          endpoint,
+          tokenRequired,
+          queryParameters,
+          base,
+        );
+
+      case HttpCall.post:
+        return await _post<T>(
+          endpoint,
+          tokenRequired,
+          queryParameters,
+          data,
+          base,
+        );
+
+      case HttpCall.delete:
+        return await _delete<T>(
+          endpoint,
+          tokenRequired,
+          queryParameters,
+          data,
+          base,
+        );
+
+      case HttpCall.put:
+        return await _put<T>(
+          endpoint,
+          tokenRequired,
+          queryParameters,
+          data,
+          base,
+        );
+    }
   }
 
   Future<Response<T>> _get<T>(
