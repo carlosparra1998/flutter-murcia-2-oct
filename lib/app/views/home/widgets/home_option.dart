@@ -9,7 +9,7 @@ class HomeOptionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
