@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_murcia_2_oct/app/views/generic_coding/sandbox.dart';
 import 'package:flutter_murcia_2_oct/app/widgets/my_app_bar.dart';
 
 class GenericCodingView extends StatefulWidget {
@@ -15,17 +16,18 @@ class _GenericCodingView extends State<GenericCodingView> {
       backgroundColor: Color.fromARGB(255, 226, 226, 226),
       appBar: myAppBar(context, 'Programación genérica'),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('ex'),
-            SizedBox(height: 20),
-            Text('ex'),
-            SizedBox(height: 20),
-            Text('ex'),
-            SizedBox(height: 20),
-            Text('ex'),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('INSTANCIA 1'),
+              Text(instance1.toString()),
+              SizedBox(height: 20),
+              Text('INSTANCIA 2'),
+              Text(instance2.toString()),
+            ],
+          ),
         ),
       ),
     );
