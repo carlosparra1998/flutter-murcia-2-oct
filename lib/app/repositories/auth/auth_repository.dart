@@ -20,9 +20,9 @@ class AuthRepository {
     );
   }
 
-  static Future<HttpResponse<String>> register(String body) async {
-    return await client.call<String, String>(
-      AuthEndpoints.register,
+  static Future<HttpResponse<List<AuthSession>>> test(String body) async {
+    return await client.call<List<AuthSession>, AuthSession>(
+      'TEST',
       method: HttpCall.post,
       data: body,
       tokenRequired: false,
