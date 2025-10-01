@@ -1,0 +1,12 @@
+  bool isNotPrimitiveData<T>() =>
+      T != Map &&
+      T != String &&
+      T != num &&
+      T != int &&
+      T != double &&
+      T != bool &&
+      (T != List<String>) &&
+      (T != List<num>) &&
+      (T != List<int>) &&
+      (T != List<double>) &&
+      (T != List<bool>);

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_murcia_2_oct/app/utils/env.dart';
+import 'package:flutter_murcia_2_oct/app/utils/general_utils.dart';
 
 import 'http_response.dart';
 
@@ -36,15 +37,6 @@ class HttpClient {
     }
   }
 
-  bool _isNotPrimitiveData<T>() =>
-      T != Map &&
-      T != String &&
-      T != num &&
-      T != bool &&
-      (T != List<String>) &&
-      (T != List<num>) &&
-      (T != List<bool>);
-
   Future<HttpResponse<T>> call<T, R>(
     String endpoint, {
     HttpCall method = HttpCall.get,
@@ -59,11 +51,9 @@ class HttpClient {
 
     base = base is R ? base : null;
 
-    print(base);
-
     try {
-      if (_isNotPrimitiveData<T>() && base == null) {
-        throw EndpointCallError('No object error');
+      if (isNotPrimitiveData<T>() && base == null) {
+        throw EndpointCallError('No object base error');
       }
 
       response = await _getResponse<T, R>(
