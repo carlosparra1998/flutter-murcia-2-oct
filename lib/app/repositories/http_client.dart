@@ -50,6 +50,8 @@ class HttpClient {
     bool error = false;
     Response<T>? response;
 
+    base = !isNotPrimitiveData<T>() ? null : base;
+
     try {
       if (isNotPrimitiveData<T>()) {
         if (base == null) {
