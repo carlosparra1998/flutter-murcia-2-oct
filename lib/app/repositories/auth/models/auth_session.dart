@@ -1,22 +1,11 @@
-import 'package:flutter_murcia_2_oct/app/repositories/response_model.dart';
+class AuthSession {
+  late final String? accessToken;
+  late final String? refreshToken;
 
-class AuthSession implements ResponseModel<AuthSession> {
-  final String? accessToken;
-  final String? refreshToken;
+  AuthSession({this.accessToken, this.refreshToken});
 
-  AuthSession({
-    this.accessToken,
-    this.refreshToken,
-  });
-
-  @override
-  AuthSession fromJson(Map<String, dynamic> json) {
-    return AuthSession(
-      accessToken: json['access_token'],
-      refreshToken: json['refresh_token'],
-    );
+  AuthSession.fromJson(Map<String, dynamic> json) {
+    accessToken = json['access_token'];
+    refreshToken = json['refresh_token'];
   }
-
-  @override
-  AuthSession get base => AuthSession();
 }

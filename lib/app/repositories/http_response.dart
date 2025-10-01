@@ -8,8 +8,6 @@ class HttpResponse<T> {
     this.errorMessage,
     this.hasError = false,
   });
-
-  T get getData => data!;
 }
 
 class EndpointCallError implements Exception {
