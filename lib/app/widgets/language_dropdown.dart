@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_murcia_2_oct/app/services/language_provider/language_provider.dart';
 import 'package:flutter_murcia_2_oct/l10n/L10N.dart';
+import 'package:provider/provider.dart';
 
 class LanguageDropdown extends StatefulWidget {
   final bool simpleMode;
@@ -21,7 +23,7 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
       ),
       height: 40,
       child: DropdownButton<Locale>(
-        value: Locale('es'),
+        value: context.read<LanguageProvider>().locale,
         underline: const SizedBox(),
         dropdownColor: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -44,6 +46,7 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
             }).toList(),
         onChanged: (Locale? newLoc) {
           if (newLoc == null) return;
+          context.read<LanguageProvider>().setLanguage(newLoc);
         },
       ),
     );

@@ -11,4 +11,9 @@ class LanguageProvider with ChangeNotifier{
     _locale = Locale('es');
     Get.offAllNamed(RouteHelper.home);
   }
+
+  void setLanguage(Locale newLoc){
+    _locale = newLoc;
+    notifyListeners();
+  }
 }

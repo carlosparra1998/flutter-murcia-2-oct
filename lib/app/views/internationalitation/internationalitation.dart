@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_murcia_2_oct/app/utils/general_utils.dart';
 import 'package:flutter_murcia_2_oct/app/widgets/language_dropdown.dart';
 import 'package:flutter_murcia_2_oct/app/widgets/my_app_bar.dart';
 
@@ -14,7 +15,7 @@ class _InternationalitationView extends State<InternationalitationView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 226, 226, 226),
-      appBar: myAppBar(context, 'Internacionalización'),
+      appBar: myAppBar(context, translate.internationalitation),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 30),
@@ -23,13 +24,13 @@ class _InternationalitationView extends State<InternationalitationView> {
             children: [
               LanguageDropdown(),
               SizedBox(height: 20),
-              Text('ex'),
+              Text(translate.spanish),
               SizedBox(height: 20),
-              Text('ex'),
+              Text(translate.english),
               SizedBox(height: 20),
-              Text('ex'),
+              Text(translate.helloWorld),
               SizedBox(height: 20),
-              Text('ex'),
+              Text(translate.internationalitation),
             ],
           ),
         ),
