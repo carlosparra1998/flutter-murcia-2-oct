@@ -137,98 +137,44 @@ class HttpClient {
   ) async {
     switch (method) {
       case HttpCall.get:
-        return await _get<T>(
+        return (await api.get(
           endpoint,
-          tokenRequired,
-          queryParameters,
-          base,
-        );
+          queryParameters: queryParameters,
+          options: Options(
+            extra: {'tokenRequired': tokenRequired, 'base': base},
+          ),
+        ));
 
       case HttpCall.post:
-        return await _post<T>(
+        return (await api.post<T>(
           endpoint,
-          tokenRequired,
-          queryParameters,
-          data,
-          base,
-        );
+          queryParameters: queryParameters,
+          data: data,
+          options: Options(
+            extra: {'tokenRequired': tokenRequired, 'base': base},
+          ),
+        ));
 
       case HttpCall.delete:
-        return await _delete<T>(
+        return (await api.delete(
           endpoint,
-          tokenRequired,
-          queryParameters,
-          data,
-          base,
-        );
+          queryParameters: queryParameters,
+          data: data,
+          options: Options(
+            extra: {'tokenRequired': tokenRequired, 'base': base},
+          ),
+        ));
 
       case HttpCall.put:
-        return await _put<T>(
+        return (await api.put(
           endpoint,
-          tokenRequired,
-          queryParameters,
-          data,
-          base,
-        );
+          queryParameters: queryParameters,
+          data: data,
+          options: Options(
+            extra: {'tokenRequired': tokenRequired, 'base': base},
+          ),
+        ));
     }
-  }
-
-  Future<Response<T>> _get<T>(
-    String endpoint,
-    bool tokenRequired,
-    Map<String, dynamic>? queryParameters,
-    dynamic base,
-  ) async {
-    return (await api.get(
-      endpoint,
-      queryParameters: queryParameters,
-      options: Options(extra: {'tokenRequired': tokenRequired, 'base': base}),
-    ));
-  }
-
-  Future<Response<T>> _post<T>(
-    String endpoint,
-    bool tokenRequired,
-    Map<String, dynamic>? queryParameters,
-    dynamic data,
-    dynamic base,
-  ) async {
-    return (await api.post<T>(
-      endpoint,
-      queryParameters: queryParameters,
-      data: data,
-      options: Options(extra: {'tokenRequired': tokenRequired, 'base': base}),
-    ));
-  }
-
-  Future<Response<T>> _put<T>(
-    String endpoint,
-    bool tokenRequired,
-    Map<String, dynamic>? queryParameters,
-    dynamic data,
-    dynamic base,
-  ) async {
-    return (await api.put(
-      endpoint,
-      queryParameters: queryParameters,
-      data: data,
-      options: Options(extra: {'tokenRequired': tokenRequired, 'base': base}),
-    ));
-  }
-
-  Future<Response<T>> _delete<T>(
-    String endpoint,
-    bool tokenRequired,
-    Map<String, dynamic>? queryParameters,
-    dynamic data,
-    dynamic base,
-  ) async {
-    return (await api.delete(
-      endpoint,
-      queryParameters: queryParameters,
-      data: data,
-      options: Options(extra: {'tokenRequired': tokenRequired, 'base': base}),
-    ));
   }
 
   String _getErrorMessage(DioError error) {
