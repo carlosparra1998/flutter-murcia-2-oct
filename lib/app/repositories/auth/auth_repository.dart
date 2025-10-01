@@ -7,11 +7,11 @@ import 'auth_endpoints.dart';
 class AuthRepository {
   static HttpClient client = HttpClient();
 
-  static Future<HttpResponse<List<AuthSession>>> login(
+  static Future<HttpResponse<AuthSession>> login(
     String email,
     String password,
   ) async {
-    return await client.call<List<AuthSession>, AuthSession>(
+    return await client.call<AuthSession, AuthSession>(
       AuthEndpoints.login,
       method: HttpCall.post,
       base: AuthSession().base,
